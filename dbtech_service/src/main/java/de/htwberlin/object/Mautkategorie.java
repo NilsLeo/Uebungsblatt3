@@ -1,6 +1,8 @@
 package de.htwberlin.object;
+
 /**
  * Die Klasse beinhaltet die Attribute einer Mautkategorie
+ *
  * @author Gruppe 07
  **/
 public class Mautkategorie {
@@ -13,6 +15,7 @@ public class Mautkategorie {
 
     /**
      * greift auf die id der Mautkategorie zu
+     *
      * @return kategorie_id die id der Mautkategorie
      */
     public int getKategorie_id() {
@@ -21,6 +24,7 @@ public class Mautkategorie {
 
     /**
      * bestimmt die id der Mautkategorie
+     *
      * @param kategorie_id die id der Mautkategorie
      */
     public void setKategorie_id(int kategorie_id) {
@@ -29,6 +33,7 @@ public class Mautkategorie {
 
     /**
      * greift auf die id der Schadstoffklasse zu
+     *
      * @return sskl_id die id der Schadstoffklasse
      */
     public int getSskl_id() {
@@ -37,6 +42,7 @@ public class Mautkategorie {
 
     /**
      * bestimmt die id der Schadstoffklasse
+     *
      * @param sskl_id die id der Schadstoffklasse
      */
     public void setSskl_id(int sskl_id) {
@@ -45,6 +51,7 @@ public class Mautkategorie {
 
     /**
      * greift auf die Bezeichnung der Mautkategorie zu
+     *
      * @return die Bezeichnung der Mautkategorie
      */
     public String getKat_bezeichnung() {
@@ -53,6 +60,7 @@ public class Mautkategorie {
 
     /**
      * bestimmt die Bezeichnung der Mautkategorie
+     *
      * @param kat_bezeichnung die Bezeichnung der Mautkategorie
      */
     public void setKat_bezeichnung(String kat_bezeichnung) {
@@ -61,6 +69,7 @@ public class Mautkategorie {
 
     /**
      * greift auf die Achszahl zu
+     *
      * @return achszahl die Achszahl
      */
     public String getAchszahl() {
@@ -69,6 +78,7 @@ public class Mautkategorie {
 
     /**
      * bestimmt die Achszahl
+     *
      * @param achszahl die Achszahl
      */
     public void setAchszahl(String achszahl) {
@@ -77,6 +87,7 @@ public class Mautkategorie {
 
     /**
      * greift auf den Mautsatz je KM in cent zu
+     *
      * @return mautsatz_je_km der Mautsatz je KM in cent
      */
     public float getMautsatz_je_km() {
@@ -85,6 +96,7 @@ public class Mautkategorie {
 
     /**
      * bestimmt den Mautsatz je KM in cent
+     *
      * @param mautsatz_je_km der Mautsatz je KM in cent
      */
     public void setMautsatz_je_km(float mautsatz_je_km) {
