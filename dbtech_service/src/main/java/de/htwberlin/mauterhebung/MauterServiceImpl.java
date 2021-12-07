@@ -1,24 +1,27 @@
 package de.htwberlin.mauterhebung;
 
 
-import java.sql.*;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import de.htwberlin.dao.BuchungDao;
 import de.htwberlin.dao.BuchungDaoImpl;
 import de.htwberlin.dao.MautkategorieDao;
 import de.htwberlin.dao.MautkategorieDaoImpl;
-import de.htwberlin.object.Buchung;
-import de.htwberlin.object.Mautkategorie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import de.htwberlin.exceptions.AlreadyCruisedException;
 import de.htwberlin.exceptions.DataException;
 import de.htwberlin.exceptions.InvalidVehicleDataException;
 import de.htwberlin.exceptions.UnkownVehicleException;
+import de.htwberlin.object.Buchung;
+import de.htwberlin.object.Mautkategorie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Die Klasse realisiert den AusleiheService.
@@ -31,16 +34,16 @@ public class MauterServiceImpl implements IMauterhebung {
     private static final Logger L = LoggerFactory.getLogger(MauterServiceImpl.class);
     private Connection connection;
 
-    @Override
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
-
     private Connection getConnection() {
         if (connection == null) {
             throw new DataException("Connection not set");
         }
         return connection;
+    }
+
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -86,9 +89,10 @@ public class MauterServiceImpl implements IMauterhebung {
 
     /**
      * berechnet die mautabschnittslänge
-     * @author Gruppe 07
+     *
      * @param mautAbschnitt der Mautabschnitt
      * @return mautAbschnittslänge die mautabschnittslänge in km
+     * @author Gruppe 07
      **/
     private float berechneMautAbschnittslänge(int mautAbschnitt) {
         String strmautAbschnittslänge;
@@ -117,11 +121,11 @@ public class MauterServiceImpl implements IMauterhebung {
 
     /**
      * berechnet den Mautsatz je km
-     * @author Gruppe 07
+     *
      * @param kennzeichen der Mautabschnitt
      * @return mautsatzJeKm der Mautsatz je Km in Euro
+     * @author Gruppe 07
      **/
-
     private float berechneMautsatzJeKm(String kennzeichen) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -140,26 +144,33 @@ public class MauterServiceImpl implements IMauterhebung {
             while (resultSet.next()) {
                 achszahl = resultSet.getInt("ACHSEN");
                 sskl_id = resultSet.getInt("SSKL_ID");
-            MautkategorieDao m_dao = new MautkategorieDaoImpl(getConnection());
-            Mautkategorie m = m_dao.findMautkategorie(sskl_id, ">= " + String.valueOf(achszahl));
-            input = m.getMautsatz_je_km() / 100;
+                MautkategorieDao m_dao = new MautkategorieDaoImpl(getConnection());
+                Mautkategorie m;
+                if (achszahl >= 5) {
+                    m = m_dao.findMautkategorie(sskl_id, ">= " + (achszahl));
+                } else {
+                    m = m_dao.findMautkategorie(sskl_id, "= " + (achszahl));
+                }
+                input = m.getMautsatz_je_km() / 100;
                 DecimalFormat df = new DecimalFormat("#.###");
-            strMautsatzJeKm = df.format(input).replaceAll(",", ".");
-            mautsatzJeKm = Float.parseFloat(strMautsatzJeKm);
-        }
-        System.out.println("mautsatzJeKm: " + mautsatzJeKm);
-        return mautsatzJeKm;
+                strMautsatzJeKm = df.format(input).replaceAll(",", ".");
+                mautsatzJeKm = Float.parseFloat(strMautsatzJeKm);
+            }
+            System.out.println("mautsatzJeKm: " + mautsatzJeKm);
+            return mautsatzJeKm;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
+
     /**
      * Überprüft, ob es sich um ein manuelles Verfahren mit offenem Buchungsstatus handelt
-     * @autor Gruppe 07
+     *
      * @param kennzeichen   das Kennzeichen des Fahrzeugs
      * @param mautAbschnitt der mautAbschnitt
      * @return true, wenn das Verfahren offen ist || false, wenn nicht
+     * @autor Gruppe 07
      **/
     private boolean openManualProcedure(String kennzeichen, int mautAbschnitt) {
         PreparedStatement preparedStatement = null;
@@ -202,9 +213,10 @@ public class MauterServiceImpl implements IMauterhebung {
 
     /**
      * Überprüft, ob es sich um ein automatisches Verfahren handelt
-     * @author Gruppe 07
+     *
      * @param kennzeichen das Kennzeichen des Fahrzeugs
      * @return true, wenn es sich um ein automatisches Verfahren handelt || false, wenn nicht
+     * @author Gruppe 07
      **/
     private boolean automaticProcedure(String kennzeichen) {
         PreparedStatement preparedStatement = null;
@@ -229,9 +241,10 @@ public class MauterServiceImpl implements IMauterhebung {
     /**
      * prueft, ob das Fahrzeug bereits registriert und aktiv ist oder eine
      * manuelle offene Buchung fuer das Fahrzeug vorliegt
-     * @author Gruppe 07
+     *
      * @param kennzeichen , das Kennzeichen des Fahrzeugs
      * @return true wenn das Fahrzeug registiert ist || false wenn nicht
+     * @author Gruppe 07
      **/
     public boolean isVehicleRegistered(String kennzeichen) {
         PreparedStatement preparedStatement = null;
@@ -260,10 +273,11 @@ public class MauterServiceImpl implements IMauterhebung {
 
     /**
      * Überprüft beim manuellen Verfahren, ob das Fahrzeug mit der korrekten Achszahl unterwegs ist
-     * @author Gruppe 07
+     *
      * @param kennzeichen das Kennzeichen des Fahrzeugs
      * @param achszahl    die achszahl
      * @return true, wenn das Fahrzeug mit der korrekten Achszahl unterwegs ist || false, wenn nicht
+     * @author Gruppe 07
      **/
     private boolean compareNoOfAxlesManuel(String kennzeichen, int achszahl) {
         PreparedStatement preparedStatement;
@@ -292,10 +306,11 @@ public class MauterServiceImpl implements IMauterhebung {
 
     /**
      * Überprüft beim automatischen Verfahren, ob das Fahrzeug mit der korrekten Achszahl unterwegs ist
-     * @author Gruppe 07
+     *
      * @param kennzeichen das Kennzeichen des Fahrzeugs
      * @param achszahl
      * @return true, wenn das Fahrzeug mit der korrekten Achszahl unterwegs ist|| false wenn nicht
+     * @author Gruppe 07
      **/
     private boolean compareAxlesAutomatic(String kennzeichen, int achszahl) {
         PreparedStatement preparedStatement = null;
