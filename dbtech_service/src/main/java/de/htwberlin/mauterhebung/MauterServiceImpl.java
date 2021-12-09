@@ -63,7 +63,7 @@ public class MauterServiceImpl implements IMauterhebung {
             }
         }
         if (isVehicleRegistered(kennzeichen) && !automaticProcedure(kennzeichen)) {
-            if (!compareNoOfAxlesManuel(kennzeichen, achszahl)) {
+            if (!compareNoOfAxlesManual(kennzeichen, achszahl)) {
                 throw new InvalidVehicleDataException("die Achszahl Manuel");
             }
         }
@@ -192,25 +192,6 @@ public class MauterServiceImpl implements IMauterhebung {
         }
     }
 
-    private int findbuchungsid(String kennzeichen, int mautAbschnitt) {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            String queryString = "SELECT b.BUCHUNG_ID FROM BUCHUNGSTATUS bs,BUCHUNG b WHERE b.B_ID=bs.B_ID AND b.KENNZEICHEN=? AND b.ABSCHNITTS_ID=? AND bs.STATUS LIKE 'offen'";
-            preparedStatement = getConnection().prepareStatement(queryString);
-            preparedStatement.setString(1, kennzeichen);
-            preparedStatement.setInt(2, mautAbschnitt);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                System.out.println(resultSet.getInt(1));
-                return resultSet.getInt(1);
-            } else return 1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * Überprüft, ob es sich um ein automatisches Verfahren handelt
      *
@@ -279,7 +260,7 @@ public class MauterServiceImpl implements IMauterhebung {
      * @return true, wenn das Fahrzeug mit der korrekten Achszahl unterwegs ist || false, wenn nicht
      * @author Gruppe 07
      **/
-    private boolean compareNoOfAxlesManuel(String kennzeichen, int achszahl) {
+    private boolean compareNoOfAxlesManual(String kennzeichen, int achszahl) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         try {

@@ -11,7 +11,6 @@ public interface MautkategorieDao {
 
     /**
      * aktualisiert eine Mautkategorie
-     *
      * @param mautkategorie das Objekt Mautkategorie, welches gespeichert werden soll
      **/
     public void updateMautkategorie(Mautkategorie mautkategorie);
@@ -23,16 +22,20 @@ public interface MautkategorieDao {
      * @return das Objekt Mautkategorie, welches gesucht wird
      */
     public Mautkategorie findMautkategorie(int Mautkategorieid);
-
+    /**
+     * findet eine Mautkategorie
+     * @param sskl_id die id der Schadstoffklasse
+     * @param achszahl die achszahl
+     * @return das Objekt Mautkategorie, welches gesucht wird
+     */
     public Mautkategorie findMautkategorie(int sskl_id, String achszahl);
 
     /**
      * erzeugt eine neue Mautkategorie
-     *
      * @param kategorie_id    die Mautkategorienummer
      * @param achszahl        die erlaubte Achszahl der Kategorie
-     * @param kat_bezeichnung die Bezeichnung
-     * @param sskl_id         die Id welche zur identifikation der sskl genutz wird
+     * @param kat_bezeichnung die Bezeichnung der Kategoie
+     * @param sskl_id         die Id welche zur identifikation der sskl genutzt wird
      * @param mautsatz_je_km  der Mautsatz der pro Kilometer berechnet wird
      * @return gibt eine neu Mautkategorie zurück
      */
