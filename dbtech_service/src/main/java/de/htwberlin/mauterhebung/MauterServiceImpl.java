@@ -13,12 +13,9 @@ import de.htwberlin.object.Buchung;
 import de.htwberlin.object.Mautkategorie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -72,8 +69,9 @@ public class MauterServiceImpl implements IMauterhebung {
                 BuchungDao b_dao = new BuchungDaoImpl(getConnection());
                 Buchung b = b_dao.findBuchung(kennzeichen, mautAbschnitt, 1);
                 b.setB_id(3);
-                java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-                b.setBefahrungsdatum(date);
+                LocalDateTime ldt = LocalDateTime.now();
+                Timestamp ts = Timestamp.valueOf(ldt);
+                b.setBefahrungsdatum(ts);
                 b_dao.updateBuchung(b);
             } else {
                 throw new AlreadyCruisedException("Es liegt eine Doppelbefahrung vor");

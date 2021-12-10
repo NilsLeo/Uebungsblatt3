@@ -1,6 +1,7 @@
 package de.htwberlin.object;
 
-import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
  * Die Klasse beinhaltet die Attribute einer Buchung
@@ -20,9 +21,9 @@ public class Buchung {
 
     public String kennzeichen;
 
-    public Date buchungsdatum;
+    public Timestamp buchungsdatum;
 
-    public Date befahrungsdatum;
+    public Timestamp befahrungsdatum;
 
     public float kosten;
 
@@ -121,7 +122,7 @@ public class Buchung {
      *
      * @return buchungsdatum das Buchungsdatum
      */
-    public Date getBuchungsdatum() {
+    public Timestamp getBuchungsdatum() {
         return buchungsdatum;
     }
 
@@ -130,7 +131,7 @@ public class Buchung {
      *
      * @param buchungsdatum das Buchungsdatum
      */
-    public void setBuchungsdatum(Date buchungsdatum) {
+    public void setBuchungsdatum(Timestamp buchungsdatum) {
         this.buchungsdatum = buchungsdatum;
     }
 
@@ -139,7 +140,7 @@ public class Buchung {
      *
      * @return befahrungsdatum das Befahrungsdatum
      */
-    public Date getBefahrungsdatum() {
+    public Timestamp getBefahrungsdatum() {
         return befahrungsdatum;
     }
 
@@ -148,7 +149,7 @@ public class Buchung {
      *
      * @param befahrungsdatum das Befahrungsdatum
      */
-    public void setBefahrungsdatum(Date befahrungsdatum) {
+    public void setBefahrungsdatum(Timestamp befahrungsdatum) {
         this.befahrungsdatum = befahrungsdatum;
     }
 
